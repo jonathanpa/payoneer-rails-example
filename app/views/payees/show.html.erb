@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @payee.email %>
+</p>
+
+<p>
+  <strong>Signed url:</strong>
+  <%= @payee.signed_url %>
+</p>
+
+<%= link_to 'Edit', edit_payee_path(@payee) %> |
+<%= link_to 'Back', payees_path %>
