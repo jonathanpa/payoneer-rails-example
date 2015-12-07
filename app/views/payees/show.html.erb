@@ -6,8 +6,8 @@
 </p>
 
 <p>
-  <strong>Signed url:</strong>
-  <%= @payee.signed_url %>
+  <strong>Sign up url:</strong>
+  <%= link_to('Payoneer sign up', @payee.sign_up_url) %>
 </p>
 
 <%= link_to 'Edit', edit_payee_path(@payee) %> |

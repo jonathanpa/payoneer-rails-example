@@ -11,13 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151207135018) do
+ActiveRecord::Schema.define(version: 20151207152932) do
 
   create_table "payees", force: :cascade do |t|
     t.string   "email"
-    t.string   "signed_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "sign_up_url"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "signed",      default: false
+    t.string   "return_tag"
   end
 
 end

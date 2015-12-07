@@ -69,6 +69,6 @@ class PayeesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def payee_params
-      params.require(:payee).permit(:email, :signed_url)
+      params.require(:payee).permit(:email)
     end
 end
