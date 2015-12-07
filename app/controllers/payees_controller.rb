@@ -1,5 +1,5 @@
 class PayeesController < ApplicationController
-  before_action :set_payee, only: [:show, :edit, :update, :destroy]
+  before_action :set_payee, only: [:show, :edit, :update, :destroy, :pay]
 
   # GET /payees
   # GET /payees.json
@@ -26,28 +26,20 @@ class PayeesController < ApplicationController
   def create
     @payee = Payee.new(payee_params)
 
-    respond_to do |format|
-      if @payee.save
-        format.html { redirect_to @payee, notice: 'Payee was successfully created.' }
-        format.json { render :show, status: :created, location: @payee }
-      else
-        format.html { render :new }
-        format.json { render json: @payee.errors, status: :unprocessable_entity }
-      end
+    if @payee.save
+      redirect_to @payee, notice: 'Payee was successfully created.'
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /payees/1
   # PATCH/PUT /payees/1.json
   def update
-    respond_to do |format|
-      if @payee.update(payee_params)
-        format.html { redirect_to @payee, notice: 'Payee was successfully updated.' }
-        format.json { render :show, status: :ok, location: @payee }
-      else
-        format.html { render :edit }
-        format.json { render json: @payee.errors, status: :unprocessable_entity }
-      end
+    if @payee.update(payee_params)
+      redirect_to @payee, notice: 'Payee was successfully updated.'
+    else
+      render :edit
     end
   end
 
@@ -55,20 +47,27 @@ class PayeesController < ApplicationController
   # DELETE /payees/1.json
   def destroy
     @payee.destroy
-    respond_to do |format|
-      format.html { redirect_to payees_url, notice: 'Payee was successfully destroyed.' }
-      format.json { head :no_content }
+    redirect_to payees_url, notice: 'Payee was successfully destroyed.'
+  end
+
+  def pay
+    payout_response = @payee.payout
+
+    if payout_response.ok?
+      redirect_to @payee, notice: 'Payout was successfully processed.'
+    else
+      redirect_to @payee, alert: "Payout failed: #{payout_response.body}"
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_payee
-      @payee = Payee.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_payee
+    @payee = Payee.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def payee_params
-      params.require(:payee).permit(:email)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def payee_params
+    params.require(:payee).permit(:email, :balance)
+  end
 end
