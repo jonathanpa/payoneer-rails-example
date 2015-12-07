@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151207152932) do
+ActiveRecord::Schema.define(version: 20151207162413) do
 
   create_table "payees", force: :cascade do |t|
     t.string   "email"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20151207152932) do
     t.datetime "updated_at",                  null: false
     t.boolean  "signed",      default: false
     t.string   "return_tag"
+    t.float    "balance",     default: 0.0
   end
 
 end
