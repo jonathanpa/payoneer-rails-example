@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @payee.email %>
+</p>
+
+<p>
+  <strong>Sign up url:</strong>
+  <%= link_to('Payoneer sign up', @payee.sign_up_url) %>
+</p>
+
+<%= link_to 'Edit', edit_payee_path(@payee) %> |
+<%= link_to 'Back', payees_path %>
