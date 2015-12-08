@@ -7,8 +7,8 @@ class Payee < ActiveRecord::Base
 
   def payout
     payment_id = SecureRandom.hex(8)
-    response = Payoneer::Payout.create(
-      program_id: Rails.application.secrets.program_id,
+    response = PayoneerManager.usd::Payout.create(
+      program_id: Rails.application.secrets.payoneer['usd']['program_id'],
       payment_id: payment_id,
       payee_id: self.email,
       amount: self.balance,
@@ -25,15 +25,15 @@ class Payee < ActiveRecord::Base
 
   def sign_up
     self.return_tag = SecureRandom.hex(8)
-    response = Payoneer::Payee.signup_url(self.email,
-                                          redirect_url: redirect_url)
+    response = PayoneerManager.usd::Payee.signup_url(self.email,
+                                                     redirect_url: redirect_url)
     self.sign_up_url = response.body if response.ok?
     save!
   end
 
   def redirect_url
-    uri = URI::HTTP.build(host: Rails.application.secrets.redirect_host,
-                         port: Rails.application.secrets.redirect_port,
+    uri = URI::HTTP.build(host: Rails.application.secrets.payoneer['redirect_host'],
+                         port: Rails.application.secrets.payoneer['redirect_port'],
                          path: "/payees/#{self.id}/confirm",
                          query: "tag=#{self.return_tag}")
     uri.to_s

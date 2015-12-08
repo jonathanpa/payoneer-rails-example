@@ -16,6 +16,7 @@ class PayeesController < ApplicationController
   # GET /payees/new
   def new
     @payee = Payee.new
+    @payee.balance = 20
   end
 
   # GET /payees/1/edit
