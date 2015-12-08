@@ -1,5 +1,6 @@
 class PayeesController < ApplicationController
-  before_action :set_payee, only: [:show, :edit, :update, :destroy, :pay]
+  before_action :set_payee, only: [:show, :edit, :update, :destroy, :pay,
+                                   :confirm]
 
   # GET /payees
   # GET /payees.json
@@ -57,6 +58,17 @@ class PayeesController < ApplicationController
       redirect_to @payee, notice: 'Payout was successfully processed.'
     else
       redirect_to @payee, alert: "Payout failed: #{payout_response.body}"
+    end
+  end
+
+  def confirm
+    if params[:tag] == @payee.return_tag
+      @payee.signed = true
+      @payee.save!
+
+      redirect_to @payee, notice: 'Payoneer sign up successful'
+    else
+      redirect_to @payee, alert: 'Payoneer sign up fail'
     end
   end
 
