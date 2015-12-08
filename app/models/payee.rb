@@ -1,5 +1,7 @@
 class Payee < ActiveRecord::Base
   validates :email, presence: true, uniqueness: true
+  validates :balance, presence: true,
+    numericality: { greater_than_or_equal_to: 20.0 }
 
   after_create :sign_up
 
@@ -22,9 +24,18 @@ class Payee < ActiveRecord::Base
   private
 
   def sign_up
-    response = Payoneer::Payee.signup_url(self.email)
-    self.sign_up_url = response.body if response.ok?
     self.return_tag = SecureRandom.hex(8)
+    response = Payoneer::Payee.signup_url(self.email,
+                                          redirect_url: redirect_url)
+    self.sign_up_url = response.body if response.ok?
     save!
+  end
+
+  def redirect_url
+    uri = URI::HTTP.build(host: Rails.application.secrets.redirect_host,
+                         port: Rails.application.secrets.redirect_port,
+                         path: "/payees/#{self.id}/confirm",
+                         query: "tag=#{self.return_tag}")
+    uri.to_s
   end
 end
