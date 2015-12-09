@@ -1,7 +1,9 @@
 class Payee < ActiveRecord::Base
-  validates :email, presence: true, uniqueness: true
-  validates :balance, presence: true,
-    numericality: { greater_than_or_equal_to: 20.0 }
+  belongs_to :currency
+
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
+  validates :balance, presence: true, numericality: { greater_than_or_equal_to: 20.0 }
+  validates :currency, presence: true
 
   after_create :sign_up
 

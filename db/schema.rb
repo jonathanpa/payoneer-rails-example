@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151207162413) do
+ActiveRecord::Schema.define(version: 20151209085603) do
+
+  create_table "currencies", force: :cascade do |t|
+    t.string   "code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "payees", force: :cascade do |t|
     t.string   "email"
@@ -21,6 +27,7 @@ ActiveRecord::Schema.define(version: 20151207162413) do
     t.boolean  "signed",      default: false
     t.string   "return_tag"
     t.float    "balance",     default: 0.0
+    t.integer  "currency_id"
   end
 
 end
