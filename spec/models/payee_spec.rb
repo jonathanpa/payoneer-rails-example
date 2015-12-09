@@ -75,4 +75,47 @@ describe Payee do
 
     it { should == expected_url }
   end
+
+  describe '#payoneer_for_currency' do
+    let!(:payee) { FactoryGirl.create(:payee, currency: currency) }
+
+    context 'usd' do
+      let!(:currency) { FactoryGirl.create(:usd) }
+
+      it 'configures Payoneer with correct credentials' do
+        expected_partner_id =
+          Rails.application.secrets.payoneer['usd']['partner_id']
+
+        payee.send(:payoneer_for_currency)
+
+        expect(Payoneer.configuration.partner_id).to eq expected_partner_id
+      end
+    end
+
+    context 'eur' do
+      let!(:currency) { FactoryGirl.create(:eur) }
+
+      it 'configures Payoneer with correct credentials' do
+        expected_partner_id =
+          Rails.application.secrets.payoneer['eur']['partner_id']
+
+        payee.send(:payoneer_for_currency)
+
+        expect(Payoneer.configuration.partner_id).to eq expected_partner_id
+      end
+    end
+
+    context 'gbp' do
+      let!(:currency) { FactoryGirl.create(:gbp) }
+
+      it 'configures Payoneer with correct credentials' do
+        expected_partner_id =
+          Rails.application.secrets.payoneer['gbp']['partner_id']
+
+        payee.send(:payoneer_for_currency)
+
+        expect(Payoneer.configuration.partner_id).to eq expected_partner_id
+      end
+    end
+  end
 end
