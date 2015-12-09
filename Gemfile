@@ -37,6 +37,7 @@ gem 'payoneer-ruby', github: 'jonathanpa/payoneer-ruby'
 group :development, :test do
   gem 'pry-rails'
   gem 'pry-byebug'
+  gem 'rspec-rails', '~> 3.0'
 end
 
 group :development do
@@ -47,3 +48,6 @@ group :development do
   gem 'spring'
 end
 
+group :test do
+  gem 'shoulda-matchers', '~> 3.0'
+end
