@@ -16,6 +16,11 @@
   <%= @payee.balance %>
 </p>
 
+<p>
+  <strong>Currency:</strong>
+  <%= @payee.currency.code %>
+</p>
+
 <%= link_to 'Payout', pay_payee_path(@payee), method: :post %> |
 <%= link_to 'Edit', edit_payee_path(@payee) %> |
 <%= link_to 'Back', payees_path %>

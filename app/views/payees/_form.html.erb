@@ -19,6 +19,10 @@
     <%= f.label :balance %><br>
     <%= f.text_field :balance %>
   </div>
+  <div class="field">
+    <%= f.label :currency %><br>
+    <%= f.collection_select(:currency_id, Currency.all, :id, :code) %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>
