@@ -9,14 +9,14 @@ class Payee < ActiveRecord::Base
 
   def payout
     payment_id = SecureRandom.hex(8)
-    response = PayoneerManager.usd::Payout.create(
+    response = payoneer_for_currency::Payout.create(
       program_id: Rails.application.secrets.payoneer['usd']['program_id'],
       payment_id: payment_id,
       payee_id: self.email,
       amount: self.balance,
       description: "Test payout to #{self.email} with amount #{self.balance}",
       payment_date: Time.now,
-      currency: 'USD'
+      currency: self.currency.code
     )
     Rails.logger.debug "PAYONEER : Payout #{payment_id} => Code : #{response.code},\
       Description: #{response.body}"
@@ -27,7 +27,7 @@ class Payee < ActiveRecord::Base
 
   def sign_up
     self.return_tag = SecureRandom.hex(8)
-    response = PayoneerManager.usd::Payee.signup_url(self.email,
+    response = payoneer_for_currency::Payee.signup_url(self.email,
                                                      redirect_url: redirect_url)
     self.sign_up_url = response.body if response.ok?
     save!
@@ -39,5 +39,9 @@ class Payee < ActiveRecord::Base
                          path: "/payees/#{self.id}/confirm",
                          query: "tag=#{self.return_tag}")
     uri.to_s
+  end
+
+  def payoneer_for_currency
+    PayoneerManager.send(self.currency.code.downcase)
   end
 end
