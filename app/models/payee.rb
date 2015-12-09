@@ -16,7 +16,7 @@ class Payee < ActiveRecord::Base
       amount: self.balance,
       description: "Test payout to #{self.email} with amount #{self.balance}",
       payment_date: Time.now,
-      currency: 'USD'
+      currency: self.currency.code
     )
     Rails.logger.debug "PAYONEER : Payout #{payment_id} => Code : #{response.code},\
       Description: #{response.body}"
