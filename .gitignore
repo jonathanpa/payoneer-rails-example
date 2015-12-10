@@ -15,9 +15,10 @@
 /log/*
 !/log/.keep
 /tmp
+/bin/rspec
+.env
 
 .ruby-version
 .ruby-gemset
 *.sw?
 
-/bin/rspec
