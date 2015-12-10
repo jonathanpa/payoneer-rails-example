@@ -21,6 +21,43 @@
   <%= @payee.currency.code %>
 </p>
 
-<%= link_to 'Payout', pay_payee_path(@payee), method: :post %> |
+<p>
+  <strong>Payouts:</strong>
+  <% if @payee.payouts.empty? %>
+    No payout.
+  <% end %>
+</p>
+
+<% if @payee.payouts.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Payment</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Currency</th>
+        <th>Response code</th>
+        <th>Response description</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @payee.payouts.each do |payout| %>
+        <tr>
+          <td><%= payout.payment_id %></td>
+          <td><%= payout.amount %></td>
+          <td><%= payout.description %></td>
+          <td><%= payout.currency.code %></td>
+          <td><%= payout.response_code %></td>
+          <td><%= payout.response_description %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<br>
+
+<%= link_to 'Make Payout', pay_payee_path(@payee), method: :post %> |
 <%= link_to 'Edit', edit_payee_path(@payee) %> |
 <%= link_to 'Back', payees_path %>
