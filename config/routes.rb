@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root 'payees#index'
+
   resources :payees do
+    resources :payouts, only: [:index]
     member do
       get 'confirm'
       post 'pay'

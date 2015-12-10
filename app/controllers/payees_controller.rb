@@ -53,7 +53,7 @@ class PayeesController < ApplicationController
   end
 
   def pay
-    payout_response = @payee.payout
+    payout_response = @payee.make_payout
 
     if payout_response.ok?
       redirect_to @payee, notice: 'Payout was successfully processed.'
