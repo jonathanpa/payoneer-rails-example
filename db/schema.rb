@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151209085603) do
+ActiveRecord::Schema.define(version: 20151210134637) do
 
   create_table "currencies", force: :cascade do |t|
     t.string   "code"
@@ -29,5 +29,20 @@ ActiveRecord::Schema.define(version: 20151209085603) do
     t.float    "balance",     default: 0.0
     t.integer  "currency_id"
   end
+
+  create_table "payouts", force: :cascade do |t|
+    t.string   "payment_id"
+    t.float    "amount"
+    t.text     "description"
+    t.string   "response_code"
+    t.string   "response_description"
+    t.integer  "payee_id"
+    t.integer  "currency_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "payouts", ["currency_id"], name: "index_payouts_on_currency_id"
+  add_index "payouts", ["payee_id"], name: "index_payouts_on_payee_id"
 
 end

@@ -27,12 +27,10 @@ describe Payee do
       Payoneer::Response.new('000', 'Processed Successfully')
     end
 
-    it 'returns a payoneer payout response' do
+    before do
       program_id = Rails.application.secrets.
         payoneer[payee.currency.code.downcase]['program_id']
-
       expect(SecureRandom).to receive(:hex).and_return(payment_id)
-
       expect(Payoneer::Payout).to receive(:create).
         with(hash_including(
           program_id: program_id,
@@ -40,9 +38,22 @@ describe Payee do
           payee_id: payee.email,
           amount: payee.balance,
           currency: payee.currency.code)).
-        and_return(payout_response)
+          and_return(payout_response)
+    end
 
-      expect(payee.payout).to eq(payout_response)
+    it { expect(payee.make_payout).to eq(payout_response) }
+
+    it 'creates a payout for payee' do
+      expect(payee.payouts.count).to eq 0
+      payee.make_payout
+
+      expect(payee.payouts.count).to eq 1
+      payout = payee.payouts.first
+      expect(payout.payment_id).to eq(payment_id)
+      expect(payout.amount).to eq(payee.balance)
+      expect(payout.response_code).to eq(payout_response.code)
+      expect(payout.response_description).to eq(payout_response.body)
+      expect(payout.currency).to eq(payee.currency)
     end
   end
 

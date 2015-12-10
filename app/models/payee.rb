@@ -1,4 +1,5 @@
 class Payee < ActiveRecord::Base
+  has_many :payouts
   belongs_to :currency
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
@@ -7,19 +8,26 @@ class Payee < ActiveRecord::Base
 
   after_create :sign_up
 
-  def payout
-    payment_id = SecureRandom.hex(8)
+  def make_payout
+    description = "Test payout to #{self.email} with amount #{self.balance}"
+
+    payout = self.payouts.build(payment_id: SecureRandom.hex(8),
+                                amount: self.balance,
+                                description: description,
+                                currency: self.currency)
+
     response = payoneer_for_currency::Payout.create(
       program_id: Rails.application.secrets.payoneer['usd']['program_id'],
-      payment_id: payment_id,
+      payment_id: payout.payment_id,
       payee_id: self.email,
       amount: self.balance,
-      description: "Test payout to #{self.email} with amount #{self.balance}",
+      description: description,
       payment_date: Time.now,
-      currency: self.currency.code
-    )
-    Rails.logger.debug "PAYONEER : Payout #{payment_id} => Code : #{response.code},\
-      Description: #{response.body}"
+      currency: self.currency.code)
+
+    payout.response_code = response.code
+    payout.response_description = response.body
+    payout.save!
     response
   end
 
